@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import {
   Clock,
   Ruler,
@@ -12,6 +13,7 @@ import {
   Zap,
   Building2,
   Info,
+  SlidersHorizontal,
 } from 'lucide-react'
 import { useAppState } from '@/lib/store'
 import AppHeader from '@/components/AppHeader'
@@ -24,7 +26,7 @@ import { cn } from '@/lib/utils'
 type Kind = 'ACCESSIBLE' | 'FAST'
 
 export default function RoutePage() {
-  const { demoNoRoute } = useAppState()
+  const { demoGpsFailed, demoNoRoute } = useAppState()
   const [kind, setKind] = useState<Kind>('ACCESSIBLE')
 
   const route = routes[kind]
@@ -43,6 +45,13 @@ export default function RoutePage() {
           <p className="text-sm leading-relaxed text-muted-foreground">
             이동 조건을 완화하거나 설정에서 우선순위를 조정한 뒤 다시 시도해 주세요.
           </p>
+          <Link
+            href="/settings"
+            className="mt-2 flex min-h-12 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-base font-bold text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          >
+            <SlidersHorizontal className="size-5" aria-hidden="true" />
+            설정에서 조건 조정하기
+          </Link>
         </div>
       </main>
     )
@@ -54,6 +63,27 @@ export default function RoutePage() {
         title="길안내"
         subtitle={`${DEMO.fromBuildingName} → ${DEMO.nextCourseBuilding} ${DEMO.nextCourseRoom}호`}
       />
+
+      {demoGpsFailed && (
+        <div
+          role="alert"
+          className="mb-4 flex items-start gap-3 rounded-2xl border-2 border-primary/30 bg-primary/5 p-4"
+        >
+          <TriangleAlert className="size-6 shrink-0 text-primary" aria-hidden="true" />
+          <div>
+            <p className="text-base font-bold text-foreground">현재 위치를 확인할 수 없어요</p>
+            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+              시연용 출발지인 {DEMO.fromBuildingName}을 기준으로 계속 안내합니다.
+            </p>
+            <Link
+              href="/settings"
+              className="mt-2 inline-flex min-h-11 items-center gap-2 rounded-lg px-1 text-sm font-bold text-primary underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              GPS 실패 상황 해제하기
+            </Link>
+          </div>
+        </div>
+      )}
 
       {/* 경로 선택 탭 */}
       <div

@@ -62,12 +62,14 @@ export default function RoutePage() {
         className="grid grid-cols-2 gap-2 rounded-2xl border border-border bg-secondary p-1.5"
       >
         <TabButton
+          id="route-tab-accessible"
           active={kind === 'ACCESSIBLE'}
           onClick={() => setKind('ACCESSIBLE')}
           icon={<Accessibility className="size-5" aria-hidden="true" />}
           label="무장애 경로"
         />
         <TabButton
+          id="route-tab-fast"
           active={kind === 'FAST'}
           onClick={() => setKind('FAST')}
           icon={<Zap className="size-5" aria-hidden="true" />}
@@ -75,6 +77,11 @@ export default function RoutePage() {
         />
       </div>
 
+      <div
+        id="route-details"
+        role="tabpanel"
+        aria-labelledby={`route-tab-${kind.toLowerCase()}`}
+      >
       {/* 지도 */}
       <section aria-label={kind === 'ACCESSIBLE' ? '무장애 경로 지도' : '빠른 경로 지도'} className="mt-4">
         <div className="h-64 w-full overflow-hidden rounded-2xl">
@@ -135,6 +142,7 @@ export default function RoutePage() {
           <p className="mt-1.5 text-base leading-relaxed text-foreground">{dest.indoorHint}</p>
         </section>
       )}
+      </div>
 
       <div className="h-2" />
     </main>
@@ -142,11 +150,13 @@ export default function RoutePage() {
 }
 
 function TabButton({
+  id,
   active,
   onClick,
   icon,
   label,
 }: {
+  id: string
   active: boolean
   onClick: () => void
   icon: React.ReactNode
@@ -155,9 +165,34 @@ function TabButton({
   return (
     <button
       type="button"
+      id={id}
       role="tab"
       aria-selected={active}
+      aria-controls="route-details"
+      tabIndex={active ? 0 : -1}
       onClick={onClick}
+      onKeyDown={(event) => {
+        if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return
+
+        const tabs = Array.from(
+          event.currentTarget.parentElement?.querySelectorAll<HTMLElement>('[role="tab"]') ?? [],
+        )
+        if (tabs.length === 0) return
+
+        event.preventDefault()
+        const currentIndex = tabs.indexOf(event.currentTarget)
+        const nextIndex =
+          event.key === 'Home'
+            ? 0
+            : event.key === 'End'
+              ? tabs.length - 1
+              : event.key === 'ArrowRight'
+                ? (currentIndex + 1) % tabs.length
+                : (currentIndex - 1 + tabs.length) % tabs.length
+
+        tabs[nextIndex]?.focus()
+        tabs[nextIndex]?.click()
+      }}
       className={cn(
         'flex min-h-[48px] items-center justify-center gap-2 rounded-xl px-3 text-base font-bold transition-colors',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',

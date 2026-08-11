@@ -34,15 +34,15 @@ export default function Toggle({
         aria-label={label}
         onClick={() => onChange(!checked)}
         className={cn(
-          'relative inline-flex h-8 w-14 shrink-0 items-center rounded-full border-2 transition-colors',
+          'relative inline-flex h-11 w-[68px] shrink-0 items-center rounded-full border-2 transition-colors',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
           checked ? 'border-primary bg-primary' : 'border-border bg-muted',
         )}
       >
         <span
           className={cn(
-            'inline-flex size-6 items-center justify-center rounded-full bg-card shadow-sm transition-transform',
-            checked ? 'translate-x-6' : 'translate-x-0.5',
+            'inline-flex size-9 items-center justify-center rounded-full bg-card shadow-sm transition-transform',
+            checked ? 'translate-x-7' : 'translate-x-0.5',
           )}
         >
           <span

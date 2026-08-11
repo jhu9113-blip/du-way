@@ -161,4 +161,9 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  .map-building:focus-visible rect {
+    stroke: var(--color-ring);
+    stroke-width: 7px;
+  }
 }

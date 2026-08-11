@@ -117,12 +117,6 @@ export default function MapCanvas({
         />
       )}
 
-      {/* 시설 아이콘 */}
-      {facilities.map((f) => {
-        const { x, y } = project({ lat: f.lat, lng: f.lng })
-        return <FacilityMarker key={f.id} x={x} y={y} type={f.type} name={f.name} />
-      })}
-
       {/* 건물 */}
       {buildings.map((b) => {
         const { x, y } = project({ lat: b.lat, lng: b.lng })
@@ -133,7 +127,7 @@ export default function MapCanvas({
             role={onBuildingClick ? 'button' : undefined}
             tabIndex={onBuildingClick ? 0 : undefined}
             aria-label={`건물: ${b.name}`}
-            className={onBuildingClick ? 'cursor-pointer focus:outline-none' : undefined}
+            className={onBuildingClick ? 'map-building cursor-pointer focus:outline-none' : undefined}
             onClick={onBuildingClick ? () => onBuildingClick(b.id) : undefined}
             onKeyDown={
               onBuildingClick
@@ -161,6 +155,12 @@ export default function MapCanvas({
             </text>
           </g>
         )
+      })}
+
+      {/* 시설은 건물과 좌표가 가까워도 가려지지 않도록 건물 위에 표시한다. */}
+      {facilities.map((f) => {
+        const { x, y } = project({ lat: f.lat, lng: f.lng })
+        return <FacilityMarker key={f.id} x={x} y={y} type={f.type} name={f.name} />
       })}
 
       {/* 현재 위치: 파란 점 + 정확도 원 */}

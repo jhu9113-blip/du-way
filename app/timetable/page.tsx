@@ -39,12 +39,12 @@ export default function TimetablePage() {
                 )}
               >
                 <div className="flex items-center justify-between">
-                  <span className="inline-flex items-center gap-1.5 text-sm font-semibold tabular-nums text-primary">
+                  <span className="inline-flex items-center gap-1.5 text-base font-semibold tabular-nums text-primary">
                     <Clock className="size-4" aria-hidden="true" />
                     {course.startTime} – {course.endTime}
                   </span>
                   {isNext && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-primary px-2.5 py-1 text-xs font-bold text-primary-foreground">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-primary px-2.5 py-1 text-base font-bold text-primary-foreground">
                       <CircleDot className="size-3.5" aria-hidden="true" />
                       다음 수업
                     </span>
@@ -73,7 +73,7 @@ export default function TimetablePage() {
         })}
       </ol>
 
-      <p className="mt-6 rounded-xl border border-dashed border-border bg-secondary px-4 py-3 text-center text-sm text-muted-foreground">
+      <p className="mt-6 rounded-xl border border-dashed border-border bg-secondary px-4 py-3 text-center text-base text-muted-foreground">
         시간표 편집은 시연 범위에 포함되지 않습니다.
       </p>
     </main>

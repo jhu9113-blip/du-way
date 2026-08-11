@@ -1,2 +1,6 @@
 allowBuilds:
   msw: true
+  unrs-resolver: false
+
+overrides:
+  hono: 4.12.25

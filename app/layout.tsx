@@ -33,7 +33,7 @@ export default function RootLayout({
     <html lang="ko" className={`light ${notoSansKr.variable} bg-background`}>
       <body className="font-sans antialiased">
         <AppProvider>
-          <div className="mx-auto flex min-h-dvh max-w-xl flex-col pb-[72px]">{children}</div>
+          <div className="mx-auto flex min-h-dvh max-w-xl flex-col pb-20">{children}</div>
           <BottomTabBar />
         </AppProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}

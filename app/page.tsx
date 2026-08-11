@@ -36,11 +36,11 @@ export default function HomePage() {
         className="rounded-2xl border border-border bg-card p-5"
       >
         <div className="flex items-center justify-between">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 text-base font-semibold text-primary">
             <CalendarDays className="size-3.5" aria-hidden="true" />
             다음 수업
           </span>
-          <span className="text-sm font-medium text-muted-foreground">
+          <span className="text-base font-medium text-muted-foreground">
             이동 수단 · {MOBILITY_LABEL[settings.mobility]}
           </span>
         </div>
@@ -72,11 +72,11 @@ export default function HomePage() {
         {/* 추천 출발 시각 강조 */}
         <div className="mt-5 flex items-center justify-between rounded-xl bg-[#1b7135] px-4 py-3 text-primary-foreground">
           <div>
-            <p className="text-sm font-medium opacity-90">추천 출발 시각</p>
+            <p className="text-base font-medium opacity-90">추천 출발 시각</p>
             <p className="text-2xl font-bold tabular-nums">{DEMO.recommendedDeparture}</p>
           </div>
           <div className="text-right">
-            <p className="text-sm font-medium opacity-90">예상 이동</p>
+            <p className="text-base font-medium opacity-90">예상 이동</p>
             <p className="text-2xl font-bold tabular-nums">{DEMO.travelMinutes}분</p>
           </div>
         </div>
@@ -91,7 +91,7 @@ export default function HomePage() {
           <AlertTriangle className="size-6 shrink-0 text-destructive" aria-hidden="true" />
           <div>
             <p className="text-base font-bold text-destructive">연강 주의 · 시간이 빠듯해요</p>
-            <p className="mt-1 text-sm leading-relaxed text-foreground">
+            <p className="mt-1 text-base leading-relaxed text-foreground">
               직전 수업이 {DEMO.prevCourseEnd}에 끝나 쉬는 시간은 {DEMO.breakMinutes}분인데, 이동에 {DEMO.travelMinutes}
               분이 필요해요.{`\u00a0`}약 {DEMO.shortageMinutes}분 부족합니다.
             </p>

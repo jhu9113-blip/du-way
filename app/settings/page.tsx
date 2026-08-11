@@ -31,7 +31,7 @@ export default function SettingsPage() {
     <main className="flex flex-1 flex-col px-5 pt-8">
       <AppHeader title="설정" subtitle="시연에 사용할 이동 조건과 여유 시간을 조정하세요." />
 
-      <div className="mb-6 flex items-start gap-2.5 rounded-xl border border-primary/30 bg-primary/5 p-3 text-sm leading-relaxed text-foreground">
+      <div className="mb-6 flex items-start gap-2.5 rounded-xl border border-primary/30 bg-primary/5 p-3 text-base leading-relaxed text-foreground">
         <Info className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
         <p>현재 경로와 안내 시간은 시연용 고정값이며, 설정에 따라 다시 계산되지 않습니다.</p>
       </div>
@@ -115,7 +115,7 @@ export default function SettingsPage() {
         <div className="flex items-center justify-between rounded-2xl border border-border bg-card p-4">
           <div>
             <p className="text-base font-medium text-foreground">버퍼 {settings.bufferMinutes}분</p>
-            <p className="mt-0.5 text-sm text-muted-foreground">시연용 도착 여유 선호값으로 저장됩니다.</p>
+            <p className="mt-0.5 text-base text-muted-foreground">시연용 도착 여유 선호값으로 저장됩니다.</p>
           </div>
           <div className="flex items-center gap-2">
             <button

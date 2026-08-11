@@ -23,7 +23,7 @@ export default function Toggle({
         <span>
           <span className="block text-base font-medium text-foreground">{label}</span>
           {description ? (
-            <span className="mt-0.5 block text-sm leading-relaxed text-muted-foreground">{description}</span>
+            <span className="mt-0.5 block text-base leading-relaxed text-muted-foreground">{description}</span>
           ) : null}
         </span>
       </span>

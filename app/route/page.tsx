@@ -19,7 +19,6 @@ import { useAppState } from '@/lib/store'
 import AppHeader from '@/components/AppHeader'
 import MapCanvas from '@/components/map/MapCanvas'
 import { buildings, facilities, routes } from '@/data/mock'
-import type { RouteResult } from '@/types'
 import { DEMO, formatDistance, formatDuration, getBuilding } from '@/lib/demo'
 import { cn } from '@/lib/utils'
 
@@ -42,7 +41,7 @@ export default function RoutePage() {
         >
           <TriangleAlert className="size-10 text-muted-foreground" aria-hidden="true" />
           <p className="text-lg font-bold text-foreground">조건에 맞는 경로를 찾지 못했어요</p>
-          <p className="text-sm leading-relaxed text-muted-foreground">
+          <p className="text-base leading-relaxed text-muted-foreground">
             이동 조건을 완화하거나 설정에서 우선순위를 조정한 뒤 다시 시도해 주세요.
           </p>
           <Link
@@ -72,12 +71,12 @@ export default function RoutePage() {
           <TriangleAlert className="size-6 shrink-0 text-primary" aria-hidden="true" />
           <div>
             <p className="text-base font-bold text-foreground">현재 위치를 확인할 수 없어요</p>
-            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+            <p className="mt-1 text-base leading-relaxed text-muted-foreground">
               시연용 출발지인 {DEMO.fromBuildingName}을 기준으로 계속 안내합니다.
             </p>
             <Link
               href="/settings"
-              className="mt-2 inline-flex min-h-11 items-center gap-2 rounded-lg px-1 text-sm font-bold text-primary underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="mt-2 inline-flex min-h-11 items-center gap-2 rounded-lg px-1 text-base font-bold text-primary underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               GPS 실패 상황 해제하기
             </Link>
@@ -123,7 +122,7 @@ export default function RoutePage() {
           />
         </div>
         {/* 선/기호 범례 (색상만으로 구분하지 않음) */}
-        <p className="mt-2 flex items-center gap-1.5 text-sm text-muted-foreground">
+        <p className="mt-2 flex items-center gap-1.5 text-base text-muted-foreground">
           <Info className="size-4 shrink-0" aria-hidden="true" />
           {kind === 'ACCESSIBLE' ? '실선: 무장애 경로' : '파선: 빠른 경로'} · 원형 기호는 시설 위치입니다.
         </p>
@@ -165,7 +164,7 @@ export default function RoutePage() {
       {/* 실내 안내 */}
       {dest?.indoorHint && (
         <section aria-label="실내 진입 안내" className="mt-4 rounded-2xl border border-border bg-card p-4">
-          <p className="inline-flex items-center gap-2 text-sm font-semibold text-primary">
+          <p className="inline-flex items-center gap-2 text-base font-semibold text-primary">
             <Building2 className="size-4" aria-hidden="true" />
             {dest.name} 진입 안내
           </p>
@@ -240,7 +239,7 @@ function Metric({ icon, label, value }: { icon: React.ReactNode; label: string; 
     <div className="flex flex-col items-center gap-1 rounded-2xl border border-border bg-card px-2 py-3 text-center">
       <span className="text-muted-foreground">{icon}</span>
       <span className="text-lg font-bold tabular-nums text-foreground">{value}</span>
-      <span className="text-xs text-muted-foreground">{label}</span>
+      <span className="text-base text-muted-foreground">{label}</span>
     </div>
   )
 }

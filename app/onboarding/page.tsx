@@ -35,7 +35,7 @@ export default function OnboardingPage() {
   return (
     <main className="flex flex-1 flex-col px-5 pb-10 pt-10">
       <header className="mb-7">
-        <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
+        <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-base font-semibold text-primary">
           <Route className="size-4" aria-hidden="true" />
           DU WAY
         </span>
@@ -122,7 +122,7 @@ export default function OnboardingPage() {
         시작하기
         <ArrowRight className="size-5" aria-hidden="true" />
       </button>
-      <p className="mt-3 text-center text-sm text-muted-foreground">설정은 나중에 언제든 바꿀 수 있어요.</p>
+      <p className="mt-3 text-center text-base text-muted-foreground">설정은 나중에 언제든 바꿀 수 있어요.</p>
     </main>
   )
 }

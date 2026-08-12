@@ -11,7 +11,7 @@ const ADMIN_MENU = [
   { href: '/admin', label: '대시보드', Icon: LayoutDashboard },
   { href: '/admin/buildings', label: '건물', Icon: Building2 },
   { href: '/admin/facilities', label: '시설', Icon: MapPinned },
-  { href: '/admin/routes', label: '경로', Icon: Route, disabled: true },
+  { href: '/admin/routes', label: '경로', Icon: Route },
 ] as const
 
 export default function AdminShell({ children }: { children: React.ReactNode }) {

@@ -43,6 +43,8 @@ export type EditableDemoAction =
   | { type: 'UPDATE_FACILITY'; payload: Facility }
   | { type: 'RESET_FACILITY'; payload: string }
   | { type: 'SET_ROUTES'; payload: Record<'FAST' | 'ACCESSIBLE', RouteResult> }
+  | { type: 'UPDATE_ROUTE'; payload: RouteResult }
+  | { type: 'RESET_ROUTE'; payload: RouteResult['kind'] }
   | { type: 'SET_COURSES'; payload: Course[] }
   | { type: 'SET_DEMO'; payload: DemoValues }
   | { type: 'RESET_ALL' }
@@ -143,6 +145,18 @@ function reducer(state: EditableDemoState, action: EditableDemoAction): Editable
           FAST: cloneRoute(action.payload.FAST),
           ACCESSIBLE: cloneRoute(action.payload.ACCESSIBLE),
         },
+        dirty: true,
+      }
+    case 'UPDATE_ROUTE':
+      return {
+        ...state,
+        routes: { ...state.routes, [action.payload.kind]: cloneRoute(action.payload) },
+        dirty: true,
+      }
+    case 'RESET_ROUTE':
+      return {
+        ...state,
+        routes: { ...state.routes, [action.payload]: cloneRoute(initialRoutes[action.payload]) },
         dirty: true,
       }
     case 'SET_COURSES':

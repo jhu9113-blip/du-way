@@ -80,28 +80,17 @@ export default function MapCanvas({
       viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
       className="h-full w-full rounded-2xl border border-border bg-secondary"
       role="img"
-      aria-label="캠퍼스 길찾기 지도 (시연용 목업)"
+      aria-label="캠퍼스 길찾기 지도"
     >
-      <defs>
-        <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
-          <path d="M 50 0 L 0 0 0 50" fill="none" stroke="var(--color-border)" strokeWidth="1" opacity="0.5" />
-        </pattern>
-      </defs>
-
-      {/* 배경: 아주 옅은 격자 */}
-      <rect x="0" y="0" width={VIEW_W} height={VIEW_H} fill="url(#grid)" />
-
-      {/* 워터마크 */}
-      <text
-        x={VIEW_W / 2}
-        y={VIEW_H - 24}
-        textAnchor="middle"
-        fontSize="20"
-        fill="var(--color-muted-foreground)"
-        opacity="0.7"
-      >
-        지도 배경은 시연용 목업입니다
-      </text>
+      {/* 사용자·관리자 지도에 공통으로 쓰는 캠퍼스 지도 배경 */}
+      <image
+        href="/campus-map.png"
+        x="0"
+        y="0"
+        width={VIEW_W}
+        height={VIEW_H}
+        preserveAspectRatio="xMidYMid slice"
+      />
 
       {/* 경로: polyline. ACCESSIBLE 은 실선, FAST 는 파선 (색상만으로 구분하지 않음) */}
       {route && (

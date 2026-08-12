@@ -2,20 +2,12 @@
 
 import { useState, type FormEvent } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { AlertCircle, Building2, CheckCircle2, Eye, MapPin, RotateCcw, Save } from 'lucide-react'
 import MapCanvas from '@/components/map/MapCanvas'
 import { useEditableDemoDispatch, useEditableDemoState } from '@/lib/editable-demo-store'
 import type { Building } from '@/types'
 import { cn } from '@/lib/utils'
 import { buildings as initialBuildings } from '@/data/mock'
-
-const BUILDING_IMAGES: Record<string, string> = {
-  'B-GYEONGSANG': '/images/du-way/building-gyeongsang.png',
-  'B-SUNGSAN': '/images/du-way/building-sungsan.png',
-  'B-INFO': '/images/du-way/building-info.png',
-  'B-LIB': '/images/du-way/building-library.png',
-}
 
 type BuildingDraft = {
   name: string
@@ -143,21 +135,8 @@ export default function AdminBuildingsPage() {
                   selected?.id === building.id ? 'border-primary bg-primary/5' : 'border-transparent hover:bg-secondary',
                 )}
               >
-                <span className="flex items-center gap-3">
-                  <Image
-                    src={BUILDING_IMAGES[building.id]}
-                    alt=""
-                    width={1536}
-                    height={1024}
-                    sizes="64px"
-                    className="size-16 shrink-0 rounded-xl border border-border bg-secondary object-cover"
-                    aria-hidden="true"
-                  />
-                  <span className="min-w-0">
-                    <span className="block text-base font-bold text-foreground">{building.name}</span>
-                    <span className="mt-1 block text-sm text-muted-foreground">{building.id}</span>
-                  </span>
-                </span>
+                <span className="block text-base font-bold text-foreground">{building.name}</span>
+                <span className="mt-1 block text-sm text-muted-foreground">{building.id}</span>
               </button>
             ))}
           </div>
@@ -166,16 +145,6 @@ export default function AdminBuildingsPage() {
         {selected && (
           <div className="space-y-6">
             <section aria-labelledby="building-edit-title" className="rounded-2xl border border-border bg-card p-5 sm:p-6">
-              <div className="mb-6 overflow-hidden rounded-2xl border border-border bg-secondary">
-                <Image
-                  src={BUILDING_IMAGES[selected.id]}
-                  alt={`${selected.name} 대표 이미지`}
-                  width={1536}
-                  height={1024}
-                  sizes="(max-width: 1280px) calc(100vw - 40px), 900px"
-                  className="aspect-[16/6] w-full object-cover"
-                />
-              </div>
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <p className="text-sm font-semibold text-primary">{selected.id}</p>

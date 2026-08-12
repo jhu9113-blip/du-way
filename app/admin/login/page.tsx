@@ -2,7 +2,6 @@
 
 import { useState, type FormEvent } from 'react'
 import { useRouter } from 'next/navigation'
-import Image from 'next/image'
 import { AlertCircle, LockKeyhole, LogIn, ShieldCheck, UserRound } from 'lucide-react'
 import { useAdminAuth } from '@/lib/admin-store'
 
@@ -31,18 +30,8 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <main className="relative flex min-h-dvh items-center justify-center overflow-hidden bg-secondary/50 px-5 py-10">
-      <Image
-        src="/images/du-way/admin-login-campus-pattern.png"
-        alt=""
-        fill
-        priority
-        sizes="100vw"
-        className="pointer-events-none object-cover opacity-70"
-        aria-hidden="true"
-      />
-      <div className="pointer-events-none absolute inset-0 bg-background/25" aria-hidden="true" />
-      <section aria-labelledby="admin-login-title" className="relative w-full max-w-md rounded-3xl border border-border bg-card/95 p-6 shadow-xl shadow-primary/10 backdrop-blur-sm sm:p-8">
+    <main className="flex min-h-dvh items-center justify-center bg-secondary/50 px-5 py-10">
+      <section aria-labelledby="admin-login-title" className="w-full max-w-md rounded-3xl border border-border bg-card p-6 shadow-sm sm:p-8">
         <header className="text-center">
           <span className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
             <ShieldCheck className="size-8" aria-hidden="true" />

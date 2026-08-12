@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import {
   Clock,
   Ruler,
@@ -41,14 +40,7 @@ export default function RoutePage() {
           role="alert"
           className="mt-4 flex flex-col items-center gap-3 rounded-2xl border-2 border-border bg-card p-8 text-center"
         >
-          <Image
-            src="/images/du-way/state-no-route.png"
-            alt="이동 경로가 중간에서 끊겨 다른 길을 선택해야 하는 모습"
-            width={1536}
-            height={1024}
-            sizes="240px"
-            className="h-auto w-60 max-w-full"
-          />
+          <TriangleAlert className="size-10 text-muted-foreground" aria-hidden="true" />
           <p className="text-lg font-bold text-foreground">조건에 맞는 경로를 찾지 못했어요</p>
           <p className="text-base leading-relaxed text-muted-foreground">
             이동 조건을 완화하거나 설정에서 우선순위를 조정한 뒤 다시 시도해 주세요.
@@ -75,17 +67,10 @@ export default function RoutePage() {
       {demoGpsFailed && (
         <div
           role="alert"
-          className="mb-4 flex flex-col items-center gap-3 rounded-2xl border-2 border-primary/30 bg-primary/5 p-4 sm:flex-row sm:items-center"
+          className="mb-4 flex items-start gap-3 rounded-2xl border-2 border-primary/30 bg-primary/5 p-4"
         >
-          <Image
-            src="/images/du-way/state-gps-unavailable.png"
-            alt="위치 신호를 찾지 못한 캠퍼스 지도와 위치 핀"
-            width={1536}
-            height={1024}
-            sizes="128px"
-            className="h-auto w-32 shrink-0 rounded-xl"
-          />
-          <div className="w-full">
+          <TriangleAlert className="size-6 shrink-0 text-primary" aria-hidden="true" />
+          <div>
             <p className="text-base font-bold text-foreground">현재 위치를 확인할 수 없어요</p>
             <p className="mt-1 text-base leading-relaxed text-muted-foreground">
               시연용 출발지인 {demo.fromBuildingName}을 기준으로 계속 안내합니다.

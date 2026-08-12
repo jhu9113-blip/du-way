@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Image from 'next/image'
 import { Footprints, Accessibility, Zap, HandHelping, ArrowRight, Route } from 'lucide-react'
 import { useAppDispatch, useAppState } from '@/lib/store'
 import type { Settings } from '@/types'
@@ -49,18 +48,6 @@ export default function OnboardingPage() {
           이름이나 학번 같은 개인정보는 묻지 않아요. 이동에 필요한 조건만 알려주시면 됩니다.
         </p>
       </header>
-
-      <div className="mb-7 overflow-hidden rounded-3xl border border-primary/10 bg-[#f8f5ef] px-3 py-1 shadow-sm">
-        <Image
-          src="/images/du-way/onboarding-accessible-campus.png"
-          alt="보행자와 휠체어 이용자가 완만한 경사로를 따라 캠퍼스 건물로 이동하는 모습"
-          width={1536}
-          height={1024}
-          priority
-          sizes="(max-width: 640px) calc(100vw - 40px), 600px"
-          className="h-auto w-full"
-        />
-      </div>
 
       <section aria-labelledby="mobility-heading" className="mb-6">
         <h2 id="mobility-heading" className="mb-3 text-lg font-bold text-foreground">

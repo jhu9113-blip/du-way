@@ -13,7 +13,7 @@ export default function AppFrame({ children }: { children: React.ReactNode }) {
       <div
         className={cn(
           'mx-auto flex min-h-dvh w-full flex-col',
-          isAdmin ? 'max-w-7xl' : 'max-w-xl pb-20',
+          isAdmin ? 'max-w-7xl' : 'max-w-[430px] pb-24',
         )}
       >
         {children}

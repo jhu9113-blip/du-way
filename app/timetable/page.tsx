@@ -16,7 +16,7 @@ export default function TimetablePage() {
     .sort((a, b) => a.startTime.localeCompare(b.startTime))
 
   return (
-    <main className="flex flex-1 flex-col px-5 pt-8">
+    <main className="flex flex-1 flex-col px-8 pt-12">
       <AppHeader
         title="오늘의 시간표"
         subtitle="수업 사이 이동에 필요한 시간을 함께 확인하세요."
@@ -34,8 +34,8 @@ export default function TimetablePage() {
             <li key={course.id}>
               <article
                 className={cn(
-                  'rounded-2xl border bg-card p-4',
-                  isNext ? 'border-2 border-primary' : 'border-border',
+                  'rounded-[20px] bg-white/80 px-7 py-5 shadow-sm',
+                  isNext ? 'border border-primary' : 'border border-white/70',
                 )}
               >
                 <div className="flex items-center justify-between">
@@ -61,7 +61,7 @@ export default function TimetablePage() {
                 {isNext && (
                   <Link
                     href="/route"
-                    className="mt-3 flex min-h-[48px] items-center justify-center gap-2 rounded-xl bg-primary px-4 text-base font-bold text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    className="mx-auto mt-5 flex min-h-[30px] w-4/5 items-center justify-center gap-2 rounded-lg bg-primary px-4 text-xs font-medium text-white transition-all active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   >
                     <Navigation className="size-4" aria-hidden="true" />
                     여기로 길안내

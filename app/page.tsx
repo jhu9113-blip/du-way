@@ -28,13 +28,13 @@ export default function HomePage() {
   }
 
   return (
-    <main className="flex flex-1 flex-col px-5 pt-8">
+    <main className="flex flex-1 flex-col px-7 pt-10">
       <AppHeader title="다음 수업까지" subtitle="지금 출발하면 딱 맞게 도착할 수 있어요." />
 
       {/* 다음 수업 카드 */}
       <section
         aria-labelledby="next-course"
-        className="rounded-2xl border border-border bg-card p-5"
+        className="rounded-[20px] border-0 bg-white/90 p-6 shadow-sm"
       >
         <div className="flex items-center justify-between">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 text-base font-semibold text-primary">
@@ -71,7 +71,7 @@ export default function HomePage() {
         </dl>
 
         {/* 추천 출발 시각 강조 */}
-        <div className="mt-5 flex items-center justify-between rounded-xl bg-[#1b7135] px-4 py-3 text-primary-foreground">
+        <div className="mt-5 flex items-center justify-between rounded-xl bg-[#43b765] px-4 py-3 text-white">
           <div>
             <p className="text-base font-medium opacity-90">추천 출발 시각</p>
             <p className="text-2xl font-bold tabular-nums">{demo.recommendedDeparture}</p>
@@ -115,7 +115,7 @@ export default function HomePage() {
       {/* 길안내 시작 */}
       <Link
         href="/route"
-        className="mt-4 flex min-h-[56px] items-center justify-center gap-2 rounded-2xl bg-[#1b7135] px-6 text-lg font-bold text-primary-foreground transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        className="mx-auto mt-4 flex min-h-[42px] w-1/3 items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-bold text-white transition-all hover:opacity-90 active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
         <Navigation className="size-5" aria-hidden="true" />
         길안내 시작하기

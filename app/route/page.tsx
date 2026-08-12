@@ -34,7 +34,7 @@ export default function RoutePage() {
 
   if (demoNoRoute) {
     return (
-      <main className="flex flex-1 flex-col px-5 pt-8">
+      <main className="flex flex-1 flex-col px-7 pt-10">
         <AppHeader title="길안내" />
         <div
           role="alert"
@@ -58,7 +58,7 @@ export default function RoutePage() {
   }
 
   return (
-    <main className="flex flex-1 flex-col px-5 pt-8">
+    <main className="flex flex-1 flex-col px-7 pt-10">
       <AppHeader
         title="길안내"
         subtitle={`${demo.fromBuildingName} → ${demo.nextCourseBuilding} ${demo.nextCourseRoom}호`}
@@ -89,7 +89,7 @@ export default function RoutePage() {
       <div
         role="tablist"
         aria-label="경로 종류 선택"
-        className="grid grid-cols-2 gap-2 rounded-2xl border border-border bg-secondary p-1.5"
+        className="grid grid-cols-2 gap-2 rounded-2xl border-0 bg-[#b6ffb9] p-2"
       >
         <TabButton
           id="route-tab-accessible"
@@ -114,7 +114,7 @@ export default function RoutePage() {
       >
       {/* 지도 */}
       <section aria-label={kind === 'ACCESSIBLE' ? '무장애 경로 지도' : '빠른 경로 지도'} className="mt-4">
-        <div className="h-64 w-full overflow-hidden rounded-2xl">
+        <div className="h-52 w-full overflow-hidden rounded-[20px] shadow-sm">
           <MapCanvas
             buildings={buildings}
             facilities={facilities}
@@ -130,7 +130,7 @@ export default function RoutePage() {
       </section>
 
       {/* 요약 지표 */}
-      <section aria-label="경로 요약" className="mt-4 grid grid-cols-3 gap-3">
+      <section aria-label="경로 요약" className="mt-4 grid grid-cols-3 gap-2">
         <Metric icon={<Clock className="size-5" aria-hidden="true" />} label="예상 시간" value={formatDuration(route.durationSec)} />
         <Metric icon={<Ruler className="size-5" aria-hidden="true" />} label="거리" value={formatDistance(route.distanceM)} />
         <Metric icon={<ArrowUpDown className="size-5" aria-hidden="true" />} label="계단" value={`${route.stairsCount}곳`} />
@@ -226,7 +226,7 @@ function TabButton({
       className={cn(
         'flex min-h-[48px] items-center justify-center gap-2 rounded-xl px-3 text-base font-bold transition-colors',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-        active ? 'bg-card text-primary shadow-sm' : 'text-muted-foreground',
+        active ? 'bg-[#76cf82] text-[#075d16] shadow-sm' : 'text-[#176c25]',
       )}
     >
       {icon}
@@ -237,7 +237,7 @@ function TabButton({
 
 function Metric({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
-    <div className="flex flex-col items-center gap-1 rounded-2xl border border-border bg-card px-2 py-3 text-center">
+    <div className="flex flex-col items-center gap-1 rounded-2xl border-0 bg-[#65c781] px-2 py-3 text-center text-white shadow-sm">
       <span className="text-muted-foreground">{icon}</span>
       <span className="text-lg font-bold tabular-nums text-foreground">{value}</span>
       <span className="text-base text-muted-foreground">{label}</span>

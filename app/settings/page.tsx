@@ -28,10 +28,10 @@ export default function SettingsPage() {
   }
 
   return (
-    <main className="flex flex-1 flex-col px-5 pt-8">
+    <main className="flex flex-1 flex-col px-6 pt-12">
       <AppHeader title="설정" subtitle="시연에 사용할 이동 조건과 여유 시간을 조정하세요." />
 
-      <div className="mb-6 flex items-start gap-2.5 rounded-xl border border-primary/30 bg-primary/5 p-3 text-base leading-relaxed text-foreground">
+      <div className="sr-only">
         <Info className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
         <p>현재 경로와 안내 시간은 시연용 고정값이며, 설정에 따라 다시 계산되지 않습니다.</p>
       </div>
@@ -51,17 +51,17 @@ export default function SettingsPage() {
                 aria-pressed={active}
                 onClick={() => patch({ mobility: value })}
                 className={cn(
-                  'flex min-h-[72px] items-center gap-3 rounded-2xl border-2 bg-card px-4 py-3 text-left transition-colors',
+                  'flex min-h-[58px] items-center justify-center gap-2 rounded-[18px] border-0 px-3 py-3 text-center shadow-md transition-all active:scale-[.98]',
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-                  active ? 'border-primary bg-primary/5' : 'border-border',
+                  active ? 'bg-[#35a957] text-white' : 'bg-[#46b967] text-white',
                 )}
               >
                 <Icon
-                  className={cn('size-6 shrink-0', active ? 'text-primary' : 'text-muted-foreground')}
+                  className="size-5 shrink-0 opacity-85"
                   aria-hidden="true"
                   strokeWidth={active ? 2.4 : 2}
                 />
-                <span className={cn('text-base font-semibold', active ? 'text-primary' : 'text-foreground')}>
+                <span className="text-sm font-semibold">
                   {label}
                 </span>
               </button>
@@ -75,7 +75,7 @@ export default function SettingsPage() {
         <h2 id="pref-h" className="mb-2 text-lg font-bold text-foreground">
           경로 우선순위
         </h2>
-        <div className="divide-y divide-border rounded-2xl border border-border bg-card px-4">
+        <div className="divide-y divide-[#e2e7e3] rounded-[20px] bg-white/90 px-5 py-1 shadow-sm">
           <Toggle
             checked={settings.avoidStairs}
             onChange={(v) => patch({ avoidStairs: v })}
@@ -112,7 +112,7 @@ export default function SettingsPage() {
         <h2 id="buffer-h" className="mb-2 text-lg font-bold text-foreground">
           도착 여유 시간
         </h2>
-        <div className="flex items-center justify-between rounded-2xl border border-border bg-card p-4">
+        <div className="flex items-center justify-between rounded-[20px] border-0 bg-white/90 p-5 shadow-sm">
           <div>
             <p className="text-base font-medium text-foreground">버퍼 {settings.bufferMinutes}분</p>
             <p className="mt-0.5 text-base text-muted-foreground">시연용 도착 여유 선호값으로 저장됩니다.</p>

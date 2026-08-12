@@ -3,7 +3,8 @@ import type { Metadata, Viewport } from 'next'
 import { Noto_Sans_KR } from 'next/font/google'
 import './globals.css'
 import { AppProvider } from '@/lib/store'
-import BottomTabBar from '@/components/BottomTabBar'
+import { AdminProvider } from '@/lib/admin-store'
+import AppFrame from '@/components/AppFrame'
 
 const notoSansKr = Noto_Sans_KR({
   subsets: ['latin'],
@@ -33,8 +34,9 @@ export default function RootLayout({
     <html lang="ko" className={`light ${notoSansKr.variable} bg-background`}>
       <body className="font-sans antialiased">
         <AppProvider>
-          <div className="mx-auto flex min-h-dvh max-w-xl flex-col pb-20">{children}</div>
-          <BottomTabBar />
+          <AdminProvider>
+            <AppFrame>{children}</AppFrame>
+          </AdminProvider>
         </AppProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>

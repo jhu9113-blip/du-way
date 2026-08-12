@@ -1,167 +1,133 @@
-Next.js 15 (App Router) + TypeScript + Tailwind CSS + shadcn/ui 로 프로토타입을 만든다.
-프로젝트명: DU WAY — 대구대학교 캠퍼스 맞춤형 길찾기 웹앱.
-모든 UI 텍스트는 한국어.
+# DU WAY 제품 요구사항 및 현재 구현 명세
 
-## 이번 프로젝트의 목표
-화면과 화면 전환(플로우)만 완성한다. 실제 데이터 연동은 하지 않는다.
-발표 시연에서 5개 화면이 끊김 없이 이어지는 것이 유일한 성공 기준이다.
+> 기준 시점: 2026-08-12<br>
+> 기술 기준: Next.js 16.3.0(App Router), React 19, TypeScript 5.7, Tailwind CSS 4, shadcn 4<br>
+> 제품 형태: 외부 연동 없이 동작하는 발표용 프런트엔드 프로토타입
 
-## 절대 지킬 제약 (위반 금지)
-- 데이터베이스, 회원가입, 로그인, 인증 없음
-- 외부 API 호출 없음. fetch/axios 사용 금지
-- 카카오맵 등 지도 SDK 사용 금지 (아래 MapCanvas 규격대로 자체 SVG로 그린다)
-- 개인식별 입력 필드를 절대 만들지 않는다: 이름, 학번, 이메일, 학과, 장애 유형
-  → 대신 "계단을 피해야 하나요?" 같은 이동조건만 묻는다
-- 모든 데이터는 파일에 하드코딩된 목업. localStorage 사용하지 않는다
-- 경로 계산 로직을 만들지 않는다. 미리 계산된 결과 객체를 그대로 보여준다
+## 1. 제품 목표
 
-## 상태 관리
-lib/store.tsx 에 React Context + useReducer 로 전역 상태 하나만 둔다.
-컴포넌트는 useAppState() / useAppDispatch() 훅으로만 접근한다.
-(나중에 Zustand + persist 로 교체할 예정이므로 저장 관련 코드는 이 파일 밖으로 새어나가지 않게 한다)
+DU WAY는 대구대학교 캠퍼스에서 사용자의 이동 조건에 맞는 길을 이해하기 쉽게 비교하는 한국어 웹앱이다. 현재 버전의 성공 기준은 온보딩, 홈, 시간표, 길안내, 설정의 5개 화면이 하나의 시연 흐름으로 연결되고 정상·GPS 실패·경로 없음 상태를 재현할 수 있는 것이다.
 
-상태 모양:
-{
-  onboarded: boolean;
-  settings: Settings;
-  courses: Course[];
-  demoNow: string;          // "2026-08-10T09:47:00" — 데모용 현재시각
-  demoGpsFailed: boolean;   // GPS 실패 상황 시뮬레이션
-  demoNoRoute: boolean;     // 경로 없음 상황 시뮬레이션
+## 2. 현재 범위
+
+### 포함
+
+- 개인정보 없이 이동 수단과 경로 선호 조건을 받는 온보딩
+- 다음 수업, 추천 출발 시각, 예상 이동시간, 연강 경고를 보여주는 홈
+- 월요일 수업 2개와 다음 수업을 보여주는 시간표
+- 빠른 경로와 무장애 경로 비교 및 자체 SVG 지도
+- 이동 수단, 경로 우선순위 4종, 도착 여유 시간 설정
+- GPS 실패 및 조건에 맞는 경로 없음 시연
+- 모바일 우선 레이아웃, 하단 탭 탐색, 키보드 조작과 접근성 레이블
+- React Context와 `useReducer`를 이용한 브라우저 메모리 상태
+
+### 제외
+
+- 데이터베이스, 서버 API, 외부 API, 지도 SDK
+- 회원가입, 로그인, 인증, 개인식별정보 입력
+- `fetch`, `axios`, `localStorage`를 통한 연동 또는 영속화
+- 실제 GPS, 실제 경로 계산, 설정에 따른 경로 재계산
+- 시간표 추가·수정·삭제
+- 실측 좌표와 운영 백엔드
+
+설정값은 시연 중 보존되지만 새로고침하면 초기화된다. 경로와 시간은 미리 정의된 고정값이며 설정 변경으로 다시 계산되지 않는다.
+
+## 3. 사용자 흐름
+
+1. `/onboarding`에서 이동 수단과 네 가지 경로 선호 조건을 선택한다.
+2. `시작하기`를 누르면 설정과 온보딩 완료 상태가 갱신되고 홈(`/`)으로 이동한다.
+3. 홈에서 다음 수업, 10:14 추천 출발, 13분 이동, 3분 부족 경고와 무장애 경로 미리보기를 확인한다.
+4. `/timetable`에서 월요일 수업 2개를 확인하고 다음 수업의 `여기로 길안내`로 이동한다.
+5. `/route`에서 무장애 경로와 빠른 경로를 전환해 지도, 거리, 시간, 계단, 위험 요소와 실내 진입 안내를 비교한다.
+6. `/settings`에서 이동 조건과 여유 시간을 변경하고 GPS 실패 또는 경로 없음 상태를 켠다.
+7. 길안내에서 예외 안내와 설정으로 돌아가는 복구 동선을 확인한다.
+
+## 4. 라우트와 구현 상태
+
+| 라우트 | 현재 기능 | 상태 |
+|---|---|---|
+| `/onboarding` | 이동 수단 4종, 선호 조건 4종, 홈 진입 | 구현됨 |
+| `/` | 미완료 사용자의 온보딩 전환, 다음 수업, 고정 출발 정보, 연강 경고, 지도 미리보기 | 구현됨 |
+| `/timetable` | 월요일 수업 2개, 다음 수업 강조, 길안내 링크 | 구현됨 |
+| `/route` | 경로 전환, 지도·지표·경고·시설·실내 안내, GPS 실패·경로 없음 | 구현됨 |
+| `/settings` | 이동 수단, 우선순위, 0~30분 버퍼, 예외 상태 토글 | 구현됨 |
+
+하단 탭은 온보딩에서 숨겨지고 나머지 라우트에서 홈·시간표·길안내·설정을 아이콘과 텍스트로 제공한다. 현재 온보딩 강제 전환은 홈(`/`) 접근에만 적용된다.
+
+## 5. 상태와 데이터
+
+전역 상태는 `lib/store.tsx` 한 곳에서 관리하며 컴포넌트는 `useAppState()`와 `useAppDispatch()`로 접근한다.
+
+```ts
+type AppState = {
+  onboarded: boolean
+  settings: Settings
+  courses: Course[]
+  demoNow: string
+  demoGpsFailed: boolean
+  demoNoRoute: boolean
 }
+```
 
-## 타입 (types/index.ts — 아래 그대로 사용, 필드 추가/삭제 금지)
+도메인 타입은 `types/index.ts`, 원본 목업은 `data/mock.ts`, 화면에서 공유하는 고정 시연값과 표시 함수는 `lib/demo.ts`에 있다. `Settings`, `Course`, `Building`, `Facility`, `PathNode`, `RouteResult`의 실제 필드는 해당 타입 파일을 단일 기준으로 삼는다.
 
-type Settings = {
-  version: 1;
-  mobility: 'WALK' | 'MANUAL_WHEELCHAIR' | 'POWER_WHEELCHAIR' | 'ASSISTED';
-  avoidStairs: boolean;
-  preferElevator: boolean;
-  preferGentleSlope: boolean;
-  minimizeDistance: boolean;
-  bufferMinutes: number;
-};
+목업 데이터는 다음과 같다.
 
-type Course = {
-  id: string;
-  name: string;
-  day: 1 | 2 | 3 | 4 | 5;
-  startTime: string;   // "10:30"
-  endTime: string;     // "12:00"
-  buildingId: string;
-  room: string;
-};
+- 건물 4개: 경상대학, 성산홀, 정보통신대학, 중앙도서관
+- 시설 6개: 엘리베이터 2, 경사로 2, 계단 1, 급경사 1
+- 월요일 수업 2개: 경영정보시스템 09:00~10:20, UX 디자인 10:30~12:00
+- 성산홀에서 경상대학으로 가는 경로 2개
+  - 빠른 경로: 620m, 480초(8분), 계단 1곳, 급경사 구간 1곳
+  - 무장애 경로: 760m, 660초(11분), 엘리베이터 1곳, 경사로 1곳
 
-type Building = {
-  id: string; name: string; aliases: string[];
-  lat: number; lng: number;
-  entranceNodeIds: string[];
-  indoorHint?: string;
-};
+초기 설정은 도보, 모든 우선순위 `false`, 버퍼 3분이다. 데모 시각은 `2026-08-10T09:47:00`이다.
 
-type Facility = {
-  id: string;
-  type: 'ELEVATOR' | 'RAMP' | 'STAIRS' | 'ACCESSIBLE_ENTRANCE' | 'STEEP_SLOPE';
-  name: string; lat: number; lng: number;
-  buildingId?: string; note?: string;
-};
+## 6. 고정 시연값
 
-type PathNode = {
-  id: string; lat: number; lng: number;
-  type: 'ENTRANCE' | 'JUNCTION' | 'RAMP' | 'STAIRS' | 'ELEVATOR' | 'WAYPOINT';
-  buildingId?: string;
-};
+- 다음 수업: UX 디자인, 10:30, 경상대학 1402호
+- 출발지: 성산홀
+- 추천 출발: 10:14
+- 예상 이동: 13분
+- 직전 수업 종료: 10:20
+- 쉬는 시간: 10분
+- 부족 시간: 3분, 연강 경고 표시
 
-type RouteResult = {
-  kind: 'FAST' | 'ACCESSIBLE';
-  nodes: PathNode[];
-  distanceM: number;
-  durationSec: number;
-  stairsCount: number;
-  elevatorCount: number;
-  rampCount: number;
-  hasSteepSlope: boolean;
-  warnings: string[];
-};
+홈의 13분은 발표용 안내값이고, 경로 상세의 8분·11분은 각 목업 경로의 `durationSec` 표시값이다.
 
-## 목업 데이터 (data/mock.ts — 좌표는 임시값, 실제 현장조사 후 교체 예정)
+## 7. SVG 지도 규격
 
-buildings (4개):
-- B-GYEONGSANG "경상대학" ["경상관","경상대"] 35.8985/128.8085
-  indoorHint: "정문 우측 경사로 진입 → 1층 엘리베이터 이용"
-- B-SUNGSAN "성산홀" ["본관"] 35.8992/128.8072
-  indoorHint: "후문 자동문 진입 → 좌측 엘리베이터"
-- B-INFO "정보통신대학" ["정통대"] 35.8978/128.8098
-  indoorHint: "1층 정문은 계단만 있음. 측면 경사로 이용"
-- B-LIB "중앙도서관" ["도서관"] 35.8996/128.8090
-  indoorHint: "지하 주차장 방향 자동문 진입"
+`components/map/MapCanvas.tsx`는 외부 지도 SDK 없이 아래 props만 사용한다.
 
-facilities (6개): 엘리베이터 2, 경사로 2, 계단 1, 급경사 1
-예) F-01 ELEVATOR "성산홀 엘리베이터" note "1F↔5F, 휠체어 이용 가능"
-    F-05 STEEP_SLOPE "경상대 뒤편 오르막" note "수동 휠체어 자력 통행 어려움"
-
-routes: 성산홀 → 경상대학 경로 2종을 하드코딩 (시연 고정값)
-- FAST: distanceM 620, durationSec 480, stairsCount 1, elevatorCount 0,
-        rampCount 0, hasSteepSlope true,
-        warnings ["계단 1곳 포함", "급경사 구간 1곳 포함"], nodes 6개
-- ACCESSIBLE: distanceM 760, durationSec 660, stairsCount 0, elevatorCount 1,
-        rampCount 1, hasSteepSlope false, warnings [], nodes 8개
-두 경로의 nodes 좌표는 서로 다른 길로 보이게 벌려서 만든다.
-
-courses (초기 2개, 월요일):
-- c1 "경영정보시스템" day 1, 09:00~10:20, B-SUNGSAN, "205"
-- c2 "UX 디자인"     day 1, 10:30~12:00, B-GYEONGSANG, "1402"
-
-settings 초기값: mobility 'WALK', 모든 옵션 false, bufferMinutes 3
-demoNow 초기값: 월요일 09:47
-
-## 시연 고정 계산값 (계산하지 말고 이 숫자를 그대로 쓴다)
-- 다음 수업: UX 디자인 10:30 경상대학 1402호
-- 예상 이동시간: 13분  → 추천 출발 10:14
-- 직전 수업 10:20 종료 → 쉬는시간 10분 → 13분 필요 → 3분 부족 → 연강 경고 ON
-
-## MapCanvas 규격 (components/map/MapCanvas.tsx)
-지도 SDK 대신 SVG로 그린다. 나중에 카카오맵 컴포넌트로 통째 교체할 것이므로
-props 인터페이스를 정확히 지킨다.
-
-props: {
-  buildings: Building[];
-  facilities: Facility[];
-  route?: RouteResult | null;
-  currentPosition?: { lat: number; lng: number } | null;
-  highlightBuildingId?: string;
-  onBuildingClick?: (id: string) => void;
+```ts
+type MapCanvasProps = {
+  buildings: Building[]
+  facilities: Facility[]
+  route?: RouteResult | null
+  currentPosition?: { lat: number; lng: number } | null
+  highlightBuildingId?: string
+  onBuildingClick?: (id: string) => void
 }
+```
 
-동작:
-- 전달된 모든 좌표의 min/max 로 bounding box 를 잡고 SVG viewBox 에 정규화 투영
-- 배경: 아주 옅은 격자 + "지도 배경은 시연용 목업입니다" 워터마크 텍스트
-- 건물: 둥근 사각 + 건물명 라벨
-- 시설: 타입별 아이콘(엘리베이터/경사로/계단/휠체어출입구/급경사) + aria-label
-- 경로: polyline. ACCESSIBLE 은 실선, FAST 는 파선으로 구분 (색상만으로 구분 금지)
-- 현재 위치: 파란 점 + 정확도 원
+- 전달 좌표의 최소·최대 범위를 이용해 SVG 좌표로 정규화한다.
+- 좌표가 없거나 한 축의 범위가 0이어도 안전한 기본 범위를 쓴다.
+- 건물, 시설별 기호와 레이블, 선택 경로, 목적지 강조, 선택적 현재 위치를 그린다.
+- 무장애 경로는 실선, 빠른 경로는 파선이며 화면에도 텍스트 범례를 표시한다.
+- 배경은 격자와 `지도 배경은 시연용 목업입니다` 워터마크를 포함한다.
 
-## 라우팅 (5개)
-/onboarding, / (홈), /timetable, /route, /settings
-- onboarded 가 false 면 / 접근 시 /onboarding 으로 리다이렉트
-- /onboarding 을 제외한 모든 화면에 하단 탭바: 홈 / 시간표 / 길안내 / 설정
-- 하단 탭바는 아이콘 + 텍스트 라벨 병기, 각 항목 최소 44×44px
+## 8. 접근성 및 디자인 요구사항
 
-## 디자인 규칙 (접근성 서비스이므로 반드시 준수)
-- 모바일 우선 375px 기준 설계, 1280px PC 에서도 중앙 정렬로 정상 표시
-- 본문 최소 16px, 터치 영역 최소 44×44px, 명도 대비 4.5:1 이상
-- 색상만으로 상태를 구분하지 않는다. 항상 아이콘 + 텍스트 병기
-  (X) 빨간 선 = 계단 포함   (O) 삼각형 아이콘 + "계단 1곳 포함"
-- 모든 인터랙티브 요소 키보드 조작 가능, 포커스 링 유지
-- 톤: 딥 네이비(#1B3A6B) 프라이머리, 배경은 밝은 뉴트럴, 카드는 흰색 + 얇은 테두리
-- 둥근 모서리 크게(rounded-2xl), 그림자는 약하게, 정보 밀도는 낮게
+- 모바일 375px 우선, 최대 폭 `max-w-xl` 중앙 정렬
+- 본문 16px 이상, 주요 조작 영역 44×44px 이상
+- 포커스 링 유지 및 버튼·탭·링크 키보드 조작 지원
+- 선택과 위험 상태를 색상뿐 아니라 아이콘, 선 모양, 텍스트, ARIA 속성으로 전달
+- 경로 탭은 좌우 방향키, Home, End를 지원
+- 딥 네이비 계열 주색, 밝은 배경, 흰 카드, 큰 둥근 모서리 사용
 
-## 이번 턴 산출물 (여기까지만 만든다)
-1. types/index.ts
-2. data/mock.ts
-3. lib/store.tsx (Context + Provider + 훅)
-4. app/layout.tsx (Provider 감싸기) + 하단 탭바 컴포넌트
-5. components/map/MapCanvas.tsx (완성)
-6. 5개 라우트 파일 — 각 화면은 제목과 "다음 단계에서 구현" 자리표시자만
+대비 4.5:1, 200% 확대, 실제 화면 낭독기 사용성은 자동·수동 검증 항목이며 구현 존재만으로 통과 처리하지 않는다.
 
-각 화면 내용은 다음 메시지에서 하나씩 지시할 테니, 지금은 절대 미리 만들지 마라.
+## 9. 현재 완료 기준과 후속 범위
+
+핵심 화면과 예외 흐름은 구현되어 있다. 릴리스 완료 판단에는 lint, TypeScript, production build, 375px·1280px 시각 점검, 키보드 전용 흐름, 화면 낭독기와 명도 대비 검증 결과가 추가로 필요하다.
+
+프로토타입 이후에는 상태 영속화, 실측 데이터, 실제 지도·GPS, 경로 탐색 알고리즘, 시간표 연동, 백엔드와 운영 관측성을 별도 제품 범위로 다룬다.

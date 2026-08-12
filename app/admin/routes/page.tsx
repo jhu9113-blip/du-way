@@ -147,9 +147,9 @@ export default function AdminRoutesPage() {
         <Link href="/route" className="flex min-h-11 items-center justify-center gap-2 rounded-xl border border-border bg-card px-4 text-base font-bold text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><Eye className="size-5" aria-hidden="true" />사용자 길안내 확인</Link>
       </header>
 
-      <div role="tablist" aria-label="편집할 경로 선택" className="mt-7 grid max-w-xl grid-cols-2 gap-2 rounded-2xl border border-border bg-secondary p-1.5">
+      <div role="group" aria-label="편집할 경로 선택" className="mt-7 grid max-w-xl grid-cols-2 gap-2 rounded-2xl border border-border bg-secondary p-1.5">
         {(['ACCESSIBLE', 'FAST'] as Kind[]).map((item) => (
-          <button key={item} type="button" role="tab" aria-selected={kind === item} onClick={() => selectRoute(item)} className={cn('min-h-12 rounded-xl px-3 text-base font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring', kind === item ? 'bg-card text-primary shadow-sm' : 'text-muted-foreground')}>
+          <button key={item} type="button" aria-pressed={kind === item} onClick={() => selectRoute(item)} className={cn('min-h-12 rounded-xl px-3 text-base font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring', kind === item ? 'bg-card text-primary shadow-sm' : 'text-muted-foreground')}>
             {item === 'ACCESSIBLE' ? '무장애 경로' : '빠른 경로'}
           </button>
         ))}

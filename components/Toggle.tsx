@@ -17,7 +17,16 @@ export default function Toggle({
   icon?: ReactNode
 }) {
   return (
-    <label className="flex min-h-[56px] cursor-pointer items-center justify-between gap-4 py-1">
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      onClick={() => onChange(!checked)}
+      className={cn(
+        'flex min-h-[56px] w-full items-center justify-between gap-4 py-1 text-left',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+      )}
+    >
       <span className="flex items-start gap-3">
         {icon ? <span className="mt-0.5 text-primary" aria-hidden="true">{icon}</span> : null}
         <span>
@@ -27,15 +36,10 @@ export default function Toggle({
           ) : null}
         </span>
       </span>
-      <button
-        type="button"
-        role="switch"
-        aria-checked={checked}
-        aria-label={label}
-        onClick={() => onChange(!checked)}
+      <span
+        aria-hidden="true"
         className={cn(
           'relative inline-flex h-11 w-[68px] shrink-0 items-center rounded-full border-2 transition-colors',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
           checked ? 'border-primary bg-primary' : 'border-border bg-muted',
         )}
       >
@@ -52,7 +56,7 @@ export default function Toggle({
             {checked ? 'ON' : 'OFF'}
           </span>
         </span>
-      </button>
-    </label>
+      </span>
+    </button>
   )
 }

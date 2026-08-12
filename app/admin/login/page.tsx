@@ -15,7 +15,12 @@ export default function AdminLoginPage() {
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
-    if (!login(username, password)) {
+    if (!username.trim() || !password) {
+      setError('아이디와 비밀번호를 모두 입력해 주세요.')
+      return
+    }
+
+    if (!login(username.trim(), password)) {
       setError('아이디 또는 비밀번호가 올바르지 않습니다.')
       return
     }
@@ -47,6 +52,8 @@ export default function AdminLoginPage() {
                 type="text"
                 autoComplete="username"
                 required
+                aria-invalid={Boolean(error)}
+                aria-describedby={error ? 'admin-login-error' : undefined}
                 value={username}
                 onChange={(event) => setUsername(event.target.value)}
                 className="min-h-12 w-full rounded-xl border border-input bg-background py-3 pl-11 pr-4 text-base text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
@@ -64,6 +71,8 @@ export default function AdminLoginPage() {
                 type="password"
                 autoComplete="current-password"
                 required
+                aria-invalid={Boolean(error)}
+                aria-describedby={error ? 'admin-login-error' : undefined}
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
                 className="min-h-12 w-full rounded-xl border border-input bg-background py-3 pl-11 pr-4 text-base text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
@@ -72,7 +81,7 @@ export default function AdminLoginPage() {
           </div>
 
           {error && (
-            <div role="alert" className="flex items-start gap-2 rounded-xl border border-destructive/40 bg-destructive/5 p-3 text-base text-destructive">
+            <div id="admin-login-error" role="alert" className="flex items-start gap-2 rounded-xl border border-destructive/40 bg-destructive/5 p-3 text-base text-destructive">
               <AlertCircle className="mt-0.5 size-5 shrink-0" aria-hidden="true" />
               {error}
             </div>

@@ -43,7 +43,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
 
   return (
     <div className="flex min-h-dvh flex-col bg-secondary/40 md:flex-row">
-      <aside className="border-b border-border bg-card md:w-64 md:border-b-0 md:border-r">
+      <aside className="border-b border-border bg-card md:flex md:w-64 md:flex-col md:border-b-0 md:border-r">
         <div className="flex min-h-20 items-center justify-between gap-3 px-5 md:border-b md:border-border">
           <Link href="/admin" className="flex items-center gap-2 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
             <span className="flex size-10 items-center justify-center rounded-xl bg-primary text-primary-foreground">

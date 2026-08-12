@@ -4,6 +4,7 @@ import { Noto_Sans_KR } from 'next/font/google'
 import './globals.css'
 import { AppProvider } from '@/lib/store'
 import { AdminProvider } from '@/lib/admin-store'
+import { EditableDemoProvider } from '@/lib/editable-demo-store'
 import AppFrame from '@/components/AppFrame'
 
 const notoSansKr = Noto_Sans_KR({
@@ -34,9 +35,11 @@ export default function RootLayout({
     <html lang="ko" className={`light ${notoSansKr.variable} bg-background`}>
       <body className="font-sans antialiased">
         <AppProvider>
-          <AdminProvider>
-            <AppFrame>{children}</AppFrame>
-          </AdminProvider>
+          <EditableDemoProvider>
+            <AdminProvider>
+              <AppFrame>{children}</AppFrame>
+            </AdminProvider>
+          </EditableDemoProvider>
         </AppProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>

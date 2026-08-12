@@ -2,13 +2,13 @@
 
 import Link from 'next/link'
 import { Clock, MapPin, Navigation, CircleDot } from 'lucide-react'
-import { useAppState } from '@/lib/store'
+import { useEditableDemoState } from '@/lib/editable-demo-store'
 import AppHeader from '@/components/AppHeader'
-import { DAY_LABEL, DEMO, getBuildingName } from '@/lib/demo'
+import { DAY_LABEL } from '@/lib/demo'
 import { cn } from '@/lib/utils'
 
 export default function TimetablePage() {
-  const { courses } = useAppState()
+  const { buildings, courses, demo } = useEditableDemoState()
 
   // 데모: 월요일(1) 기준으로 정렬해 보여준다
   const dayCourses = [...courses]
@@ -29,7 +29,7 @@ export default function TimetablePage() {
 
       <ol className="space-y-3">
         {dayCourses.map((course) => {
-          const isNext = course.name === DEMO.nextCourseName
+          const isNext = course.name === demo.nextCourseName
           return (
             <li key={course.id}>
               <article
@@ -55,7 +55,7 @@ export default function TimetablePage() {
 
                 <p className="mt-1.5 inline-flex items-center gap-1.5 text-base text-muted-foreground">
                   <MapPin className="size-4 shrink-0" aria-hidden="true" />
-                  {getBuildingName(course.buildingId)} {course.room}호
+                  {buildings.find((building) => building.id === course.buildingId)?.name ?? course.buildingId} {course.room}호
                 </p>
 
                 {isNext && (

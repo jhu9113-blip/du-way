@@ -5,13 +5,14 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Clock, MapPin, DoorOpen, AlertTriangle, Navigation, CalendarDays, ChevronRight } from 'lucide-react'
 import { useAppState } from '@/lib/store'
+import { useEditableDemoState } from '@/lib/editable-demo-store'
 import AppHeader from '@/components/AppHeader'
 import MapCanvas from '@/components/map/MapCanvas'
-import { buildings, facilities, routes } from '@/data/mock'
-import { DEMO, MOBILITY_LABEL } from '@/lib/demo'
+import { MOBILITY_LABEL } from '@/lib/demo'
 
 export default function HomePage() {
   const { onboarded, settings } = useAppState()
+  const { buildings, facilities, routes, demo } = useEditableDemoState()
   const router = useRouter()
 
   useEffect(() => {
@@ -46,26 +47,26 @@ export default function HomePage() {
         </div>
 
         <h2 id="next-course" className="mt-3 text-xl font-bold text-foreground">
-          {DEMO.nextCourseName}
+          {demo.nextCourseName}
         </h2>
 
         <dl className="mt-4 space-y-2.5 text-base">
           <div className="flex items-center gap-2.5 text-foreground">
             <Clock className="size-5 shrink-0 text-muted-foreground" aria-hidden="true" />
             <dt className="sr-only">시작 시각</dt>
-            <dd>{DEMO.nextCourseStart} 시작</dd>
+            <dd>{demo.nextCourseStart} 시작</dd>
           </div>
           <div className="flex items-center gap-2.5 text-foreground">
             <MapPin className="size-5 shrink-0 text-muted-foreground" aria-hidden="true" />
             <dt className="sr-only">장소</dt>
             <dd>
-              {DEMO.nextCourseBuilding} {DEMO.nextCourseRoom}호
+              {demo.nextCourseBuilding} {demo.nextCourseRoom}호
             </dd>
           </div>
           <div className="flex items-center gap-2.5 text-foreground">
             <DoorOpen className="size-5 shrink-0 text-muted-foreground" aria-hidden="true" />
             <dt className="sr-only">출발지</dt>
-            <dd>{DEMO.fromBuildingName}에서 출발</dd>
+            <dd>{demo.fromBuildingName}에서 출발</dd>
           </div>
         </dl>
 
@@ -73,17 +74,17 @@ export default function HomePage() {
         <div className="mt-5 flex items-center justify-between rounded-xl bg-[#1b7135] px-4 py-3 text-primary-foreground">
           <div>
             <p className="text-base font-medium opacity-90">추천 출발 시각</p>
-            <p className="text-2xl font-bold tabular-nums">{DEMO.recommendedDeparture}</p>
+            <p className="text-2xl font-bold tabular-nums">{demo.recommendedDeparture}</p>
           </div>
           <div className="text-right">
             <p className="text-base font-medium opacity-90">예상 이동</p>
-            <p className="text-2xl font-bold tabular-nums">{DEMO.travelMinutes}분</p>
+            <p className="text-2xl font-bold tabular-nums">{demo.travelMinutes}분</p>
           </div>
         </div>
       </section>
 
       {/* 연강 경고 — 아이콘 + 텍스트 병기 */}
-      {DEMO.backToBackWarning && (
+      {demo.backToBackWarning && (
         <div
           role="alert"
           className="mt-4 flex items-start gap-3 rounded-2xl border-2 border-destructive/40 bg-destructive/5 p-4"
@@ -92,8 +93,8 @@ export default function HomePage() {
           <div>
             <p className="text-base font-bold text-destructive">연강 주의 · 시간이 빠듯해요</p>
             <p className="mt-1 text-base leading-relaxed text-foreground">
-              직전 수업이 {DEMO.prevCourseEnd}에 끝나 쉬는 시간은 {DEMO.breakMinutes}분인데, 이동에 {DEMO.travelMinutes}
-              분이 필요해요.{`\u00a0`}약 {DEMO.shortageMinutes}분 부족합니다.
+              직전 수업이 {demo.prevCourseEnd}에 끝나 쉬는 시간은 {demo.breakMinutes}분인데, 이동에 {demo.travelMinutes}
+              분이 필요해요.{`\u00a0`}약 {demo.shortageMinutes}분 부족합니다.
             </p>
           </div>
         </div>
@@ -106,7 +107,7 @@ export default function HomePage() {
             buildings={buildings}
             facilities={facilities}
             route={routes.ACCESSIBLE}
-            highlightBuildingId={DEMO.nextCourseBuildingId}
+            highlightBuildingId={demo.nextCourseBuildingId}
           />
         </div>
       </section>

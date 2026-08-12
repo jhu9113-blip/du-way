@@ -16,20 +16,21 @@ import {
   SlidersHorizontal,
 } from 'lucide-react'
 import { useAppState } from '@/lib/store'
+import { useEditableDemoState } from '@/lib/editable-demo-store'
 import AppHeader from '@/components/AppHeader'
 import MapCanvas from '@/components/map/MapCanvas'
-import { buildings, facilities, routes } from '@/data/mock'
-import { DEMO, formatDistance, formatDuration, getBuilding } from '@/lib/demo'
+import { formatDistance, formatDuration } from '@/lib/demo'
 import { cn } from '@/lib/utils'
 
 type Kind = 'ACCESSIBLE' | 'FAST'
 
 export default function RoutePage() {
   const { demoGpsFailed, demoNoRoute } = useAppState()
+  const { buildings, facilities, routes, demo } = useEditableDemoState()
   const [kind, setKind] = useState<Kind>('ACCESSIBLE')
 
   const route = routes[kind]
-  const dest = getBuilding(DEMO.nextCourseBuildingId)
+  const dest = buildings.find((building) => building.id === demo.nextCourseBuildingId)
 
   if (demoNoRoute) {
     return (
@@ -60,7 +61,7 @@ export default function RoutePage() {
     <main className="flex flex-1 flex-col px-5 pt-8">
       <AppHeader
         title="길안내"
-        subtitle={`${DEMO.fromBuildingName} → ${DEMO.nextCourseBuilding} ${DEMO.nextCourseRoom}호`}
+        subtitle={`${demo.fromBuildingName} → ${demo.nextCourseBuilding} ${demo.nextCourseRoom}호`}
       />
 
       {demoGpsFailed && (
@@ -72,7 +73,7 @@ export default function RoutePage() {
           <div>
             <p className="text-base font-bold text-foreground">현재 위치를 확인할 수 없어요</p>
             <p className="mt-1 text-base leading-relaxed text-muted-foreground">
-              시연용 출발지인 {DEMO.fromBuildingName}을 기준으로 계속 안내합니다.
+              시연용 출발지인 {demo.fromBuildingName}을 기준으로 계속 안내합니다.
             </p>
             <Link
               href="/settings"
@@ -118,7 +119,7 @@ export default function RoutePage() {
             buildings={buildings}
             facilities={facilities}
             route={route}
-            highlightBuildingId={DEMO.nextCourseBuildingId}
+            highlightBuildingId={demo.nextCourseBuildingId}
           />
         </div>
         {/* 선/기호 범례 (색상만으로 구분하지 않음) */}

@@ -11,11 +11,13 @@ export type Settings = {
 export type Course = {
   id: string
   name: string
+  professor?: string
   day: 1 | 2 | 3 | 4 | 5
   startTime: string // "10:30"
   endTime: string // "12:00"
   buildingId: string
   room: string
+  location?: string
 }
 
 export type Building = {

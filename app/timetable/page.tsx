@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Clock, MapPin, Navigation, CircleDot } from 'lucide-react'
+import { Clock, MapPin, Navigation, CircleDot, Plus } from 'lucide-react'
 import { useEditableDemoState } from '@/lib/editable-demo-store'
 import AppHeader from '@/components/AppHeader'
 import { DAY_LABEL } from '@/lib/demo'
@@ -55,7 +55,7 @@ export default function TimetablePage() {
 
                 <p className="mt-1.5 inline-flex items-center gap-1.5 text-base text-muted-foreground">
                   <MapPin className="size-4 shrink-0" aria-hidden="true" />
-                  {buildings.find((building) => building.id === course.buildingId)?.name ?? course.buildingId} {course.room}호
+                  {course.location ?? `${buildings.find((building) => building.id === course.buildingId)?.name ?? course.buildingId} ${course.room}호`}
                 </p>
 
                 {isNext && (
@@ -73,9 +73,13 @@ export default function TimetablePage() {
         })}
       </ol>
 
-      <p className="mt-6 rounded-xl border border-dashed border-border bg-secondary px-4 py-3 text-center text-base text-muted-foreground">
-        시간표 편집은 시연 범위에 포함되지 않습니다.
-      </p>
+      <Link
+        href="/timetable/edit"
+        className="mt-7 flex min-h-[80px] w-full flex-col items-center justify-center gap-1 rounded-[20px] border border-white/70 bg-white/80 px-4 py-4 text-primary shadow-sm transition-all hover:bg-white/90 active:scale-[.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      >
+        <Plus className="size-8" strokeWidth={1.5} aria-hidden="true" />
+        <span className="text-xs font-medium">시간표 추가 및 수정</span>
+      </Link>
     </main>
   )
 }

@@ -3,7 +3,7 @@
 import { useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { Building2, LayoutDashboard, LogOut, MapPinned, Route, ShieldCheck } from 'lucide-react'
+import { Building2, FlaskConical, LayoutDashboard, LogOut, MapPinned, Route, ShieldCheck } from 'lucide-react'
 import { useAdminAuth } from '@/lib/admin-store'
 import { cn } from '@/lib/utils'
 
@@ -12,6 +12,7 @@ const ADMIN_MENU = [
   { href: '/admin/buildings', label: '건물', Icon: Building2 },
   { href: '/admin/facilities', label: '시설', Icon: MapPinned },
   { href: '/admin/routes', label: '경로', Icon: Route },
+  { href: '/admin/demo', label: '데모', Icon: FlaskConical },
 ] as const
 
 export default function AdminShell({ children }: { children: React.ReactNode }) {

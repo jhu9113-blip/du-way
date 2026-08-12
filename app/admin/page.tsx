@@ -109,10 +109,10 @@ export default function AdminDashboardPage() {
             <StatusItem label="경로 없음" active={demoNoRoute} />
           </div>
           <Link
-            href="/settings"
+            href="/admin/demo"
             className="mt-4 flex min-h-11 items-center justify-center gap-2 rounded-xl border border-border bg-secondary px-4 text-base font-bold text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
-            시연 상태 변경하기
+            데모 설정 관리
           </Link>
         </section>
       </div>
@@ -124,15 +124,20 @@ export default function AdminDashboardPage() {
           </span>
           <div>
             <h2 id="data-sections" className="text-xl font-bold text-foreground">데이터 관리 메뉴</h2>
-            <p className="text-base text-muted-foreground">다음 스프린트부터 순서대로 편집 기능을 연결합니다.</p>
+            <p className="text-base text-muted-foreground">현재 세션에서 사용자 앱에 반영할 데이터를 편집합니다.</p>
           </div>
         </div>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {['건물 관리', '시설 관리', '경로 관리', '데모 관리'].map((label) => (
-            <div key={label} className="rounded-xl border border-dashed border-border bg-secondary/50 p-4">
-              <p className="font-bold text-foreground">{label}</p>
-              <p className="mt-1 text-sm text-muted-foreground">후속 스프린트 예정</p>
-            </div>
+          {[
+            { label: '건물 관리', href: '/admin/buildings' },
+            { label: '시설 관리', href: '/admin/facilities' },
+            { label: '경로 관리', href: '/admin/routes' },
+            { label: '데모 관리', href: '/admin/demo' },
+          ].map((item) => (
+            <Link key={item.href} href={item.href} className="rounded-xl border border-border bg-secondary/50 p-4 hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+              <p className="font-bold text-foreground">{item.label}</p>
+              <p className="mt-1 text-sm text-primary">관리 화면 열기</p>
+            </Link>
           ))}
         </div>
       </section>

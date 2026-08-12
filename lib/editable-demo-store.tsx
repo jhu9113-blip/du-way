@@ -47,6 +47,7 @@ export type EditableDemoAction =
   | { type: 'RESET_ROUTE'; payload: RouteResult['kind'] }
   | { type: 'SET_COURSES'; payload: Course[] }
   | { type: 'SET_DEMO'; payload: DemoValues }
+  | { type: 'RESET_DEMO' }
   | { type: 'RESET_ALL' }
 
 function cloneBuildings(source: Building[]) {
@@ -163,6 +164,13 @@ function reducer(state: EditableDemoState, action: EditableDemoAction): Editable
       return { ...state, courses: cloneCourses(action.payload), dirty: true }
     case 'SET_DEMO':
       return { ...state, demo: { ...action.payload }, dirty: true }
+    case 'RESET_DEMO':
+      return {
+        ...state,
+        courses: cloneCourses(initialCourses),
+        demo: { ...DEMO },
+        dirty: true,
+      }
     case 'RESET_ALL':
       return createInitialState()
     default:

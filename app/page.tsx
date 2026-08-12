@@ -16,13 +16,13 @@ export default function HomePage() {
   const router = useRouter()
 
   useEffect(() => {
-    if (!onboarded) router.replace('/onboarding')
+    if (!onboarded) router.replace('/welcome')
   }, [onboarded, router])
 
   if (!onboarded) {
     return (
       <main className="flex flex-1 items-center justify-center px-5">
-        <p className="text-base text-muted-foreground">온보딩으로 이동 중…</p>
+        <p className="text-base text-muted-foreground">시작 화면으로 이동 중…</p>
       </main>
     )
   }

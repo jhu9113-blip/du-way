@@ -9,8 +9,8 @@ import { cn } from '@/lib/utils'
 
 const ADMIN_MENU = [
   { href: '/admin', label: '대시보드', Icon: LayoutDashboard },
-  { href: '/admin/buildings', label: '건물', Icon: Building2, disabled: true },
-  { href: '/admin/facilities', label: '시설', Icon: MapPinned, disabled: true },
+  { href: '/admin/buildings', label: '건물', Icon: Building2 },
+  { href: '/admin/facilities', label: '시설', Icon: MapPinned },
   { href: '/admin/routes', label: '경로', Icon: Route, disabled: true },
 ] as const
 

@@ -37,7 +37,11 @@ export type EditableDemoState = {
 
 export type EditableDemoAction =
   | { type: 'SET_BUILDINGS'; payload: Building[] }
+  | { type: 'UPDATE_BUILDING'; payload: Building }
+  | { type: 'RESET_BUILDING'; payload: string }
   | { type: 'SET_FACILITIES'; payload: Facility[] }
+  | { type: 'UPDATE_FACILITY'; payload: Facility }
+  | { type: 'RESET_FACILITY'; payload: string }
   | { type: 'SET_ROUTES'; payload: Record<'FAST' | 'ACCESSIBLE', RouteResult> }
   | { type: 'SET_COURSES'; payload: Course[] }
   | { type: 'SET_DEMO'; payload: DemoValues }
@@ -85,8 +89,53 @@ function reducer(state: EditableDemoState, action: EditableDemoAction): Editable
   switch (action.type) {
     case 'SET_BUILDINGS':
       return { ...state, buildings: cloneBuildings(action.payload), dirty: true }
+    case 'UPDATE_BUILDING': {
+      const building = cloneBuildings([action.payload])[0]
+      return {
+        ...state,
+        buildings: state.buildings.map((item) => item.id === building.id ? building : item),
+        demo: {
+          ...state.demo,
+          ...(state.demo.nextCourseBuildingId === building.id ? { nextCourseBuilding: building.name } : {}),
+          ...(state.demo.fromBuildingId === building.id ? { fromBuildingName: building.name } : {}),
+        },
+        dirty: true,
+      }
+    }
+    case 'RESET_BUILDING': {
+      const original = initialBuildings.find((building) => building.id === action.payload)
+      if (!original) return state
+      const building = cloneBuildings([original])[0]
+      return {
+        ...state,
+        buildings: state.buildings.map((item) => item.id === building.id ? building : item),
+        demo: {
+          ...state.demo,
+          ...(state.demo.nextCourseBuildingId === building.id ? { nextCourseBuilding: building.name } : {}),
+          ...(state.demo.fromBuildingId === building.id ? { fromBuildingName: building.name } : {}),
+        },
+        dirty: true,
+      }
+    }
     case 'SET_FACILITIES':
       return { ...state, facilities: cloneFacilities(action.payload), dirty: true }
+    case 'UPDATE_FACILITY': {
+      const facility = { ...action.payload }
+      return {
+        ...state,
+        facilities: state.facilities.map((item) => item.id === facility.id ? facility : item),
+        dirty: true,
+      }
+    }
+    case 'RESET_FACILITY': {
+      const original = initialFacilities.find((facility) => facility.id === action.payload)
+      if (!original) return state
+      return {
+        ...state,
+        facilities: state.facilities.map((item) => item.id === original.id ? { ...original } : item),
+        dirty: true,
+      }
+    }
     case 'SET_ROUTES':
       return {
         ...state,

@@ -1,18 +1,11 @@
 'use client'
 
-import { Footprints, Accessibility, Zap, HandHelping, Minus, Plus, ArrowUpDown, ArrowUp, Route as RouteIcon, Ruler, FlaskConical, Info } from 'lucide-react'
+import { Minus, Plus, ArrowUpDown, ArrowUp, Route as RouteIcon, Ruler, FlaskConical, Info } from 'lucide-react'
 import { useAppDispatch, useAppState } from '@/lib/store'
 import type { Settings } from '@/types'
 import AppHeader from '@/components/AppHeader'
 import Toggle from '@/components/Toggle'
-import { cn } from '@/lib/utils'
-
-const MOBILITY_OPTIONS: { value: Settings['mobility']; label: string; Icon: typeof Footprints }[] = [
-  { value: 'WALK', label: '도보', Icon: Footprints },
-  { value: 'MANUAL_WHEELCHAIR', label: '수동 휠체어', Icon: Accessibility },
-  { value: 'POWER_WHEELCHAIR', label: '전동 휠체어', Icon: Zap },
-  { value: 'ASSISTED', label: '도움 이동', Icon: HandHelping },
-]
+import MobilitySelector from '@/components/MobilitySelector'
 
 export default function SettingsPage() {
   const { settings, demoGpsFailed, demoNoRoute } = useAppState()
@@ -41,33 +34,10 @@ export default function SettingsPage() {
         <h2 id="mobility-h" className="mb-3 text-lg font-bold text-foreground">
           이동 수단
         </h2>
-        <div className="grid grid-cols-2 gap-3">
-          {MOBILITY_OPTIONS.map(({ value, label, Icon }) => {
-            const active = settings.mobility === value
-            return (
-              <button
-                key={value}
-                type="button"
-                aria-pressed={active}
-                onClick={() => patch({ mobility: value })}
-                className={cn(
-                  'flex min-h-[58px] items-center justify-center gap-2 rounded-[18px] border-0 px-3 py-3 text-center shadow-md transition-all active:scale-[.98]',
-                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-                  active ? 'bg-[#35a957] text-white' : 'bg-[#46b967] text-white',
-                )}
-              >
-                <Icon
-                  className="size-5 shrink-0 opacity-85"
-                  aria-hidden="true"
-                  strokeWidth={active ? 2.4 : 2}
-                />
-                <span className="text-sm font-semibold">
-                  {label}
-                </span>
-              </button>
-            )
-          })}
-        </div>
+        <MobilitySelector
+          value={settings.mobility}
+          onChange={(mobility) => patch({ mobility })}
+        />
       </section>
 
       {/* 경로 우선순위 */}

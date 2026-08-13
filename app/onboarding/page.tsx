@@ -2,18 +2,10 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Footprints, Accessibility, Zap, HandHelping } from 'lucide-react'
 import { useAppDispatch, useAppState } from '@/lib/store'
 import type { Settings } from '@/types'
 import Toggle from '@/components/Toggle'
-import { cn } from '@/lib/utils'
-
-const MOBILITY_OPTIONS: { value: Settings['mobility']; label: string; Icon: typeof Footprints }[] = [
-  { value: 'WALK', label: '도보', Icon: Footprints },
-  { value: 'MANUAL_WHEELCHAIR', label: '수동 휠체어', Icon: Accessibility },
-  { value: 'POWER_WHEELCHAIR', label: '전동 휠체어', Icon: Zap },
-  { value: 'ASSISTED', label: '도움 이동', Icon: HandHelping },
-]
+import MobilitySelector from '@/components/MobilitySelector'
 
 export default function OnboardingPage() {
   const { settings } = useAppState()
@@ -49,33 +41,11 @@ export default function OnboardingPage() {
         <h2 id="mobility-heading" className="mb-3 text-lg font-bold text-foreground">
           주로 어떻게 이동하세요?
         </h2>
-        <div className="grid grid-cols-2 gap-4">
-          {MOBILITY_OPTIONS.map(({ value, label, Icon }) => {
-            const active = draft.mobility === value
-            return (
-              <button
-                key={value}
-                type="button"
-                aria-pressed={active}
-                onClick={() => patch({ mobility: value })}
-                className={cn(
-                  'flex min-h-[74px] items-center justify-center gap-2 rounded-[18px] border-0 px-3 py-4 text-center shadow-sm transition-all active:scale-[.98]',
-                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-                  active ? 'bg-[#35a957] text-white' : 'bg-[#54c477] text-white',
-                )}
-              >
-                <Icon
-                  className="size-6 opacity-80"
-                  aria-hidden="true"
-                  strokeWidth={active ? 2.4 : 2}
-                />
-                <span className="text-[15px] font-semibold">
-                  {label}
-                </span>
-              </button>
-            )
-          })}
-        </div>
+        <MobilitySelector
+          value={draft.mobility}
+          onChange={(mobility) => patch({ mobility })}
+          size="onboarding"
+        />
       </section>
 
       <section aria-labelledby="pref-heading" className="mb-8">

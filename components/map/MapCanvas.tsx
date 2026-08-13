@@ -16,7 +16,12 @@ export type MapCanvasProps = {
 
 const VIEW_W = 1000
 const VIEW_H = 700
-const PAD = 90
+
+// campus-map.png의 고정 촬영 범위. 지도는 북쪽이 화면 정위와 조금 다르므로
+// 단순 최소/최대 확대 대신 실제 건물과 도로를 기준으로 맞춘 affine 변환을 쓴다.
+// 기준점: 성산홀(460, 120), 경상대학 건물군(529, 559), 우회로 분기(420, 260)
+const MAP_ORIGIN = { lat: 35.8992, lng: 128.8072, x: 460, y: 120 } as const
+const VISIBLE_BUILDING_IDS = new Set(['B-SUNGSAN', 'B-GYEONGSANG'])
 
 const FACILITY_LABEL: Record<Facility['type'], string> = {
   ELEVATOR: '엘리베이터',
@@ -28,6 +33,14 @@ const FACILITY_LABEL: Record<Facility['type'], string> = {
 
 type Pt = { lat: number; lng: number }
 
+function projectMapPoint(p: Pt) {
+  const dLng = p.lng - MAP_ORIGIN.lng
+  const dLat = p.lat - MAP_ORIGIN.lat
+  const x = MAP_ORIGIN.x - 16608 * dLng - 129415 * dLat
+  const y = MAP_ORIGIN.y + 217310 * dLng - 223567 * dLat
+  return { x, y }
+}
+
 export default function MapCanvas({
   buildings,
   facilities,
@@ -36,44 +49,12 @@ export default function MapCanvas({
   highlightBuildingId,
   onBuildingClick,
 }: MapCanvasProps) {
-  const project = useMemo(() => {
-    const pts: Pt[] = [
-      ...buildings.map((b) => ({ lat: b.lat, lng: b.lng })),
-      ...facilities.map((f) => ({ lat: f.lat, lng: f.lng })),
-      ...(route?.nodes.map((n) => ({ lat: n.lat, lng: n.lng })) ?? []),
-      ...(currentPosition ? [currentPosition] : []),
-    ]
-
-    // 좌표가 하나도 없을 때의 안전한 기본값
-    let minLat = Math.min(...pts.map((p) => p.lat))
-    let maxLat = Math.max(...pts.map((p) => p.lat))
-    let minLng = Math.min(...pts.map((p) => p.lng))
-    let maxLng = Math.max(...pts.map((p) => p.lng))
-
-    if (!Number.isFinite(minLat)) {
-      minLat = 0
-      maxLat = 1
-      minLng = 0
-      maxLng = 1
-    }
-
-    const latSpan = maxLat - minLat || 1
-    const lngSpan = maxLng - minLng || 1
-
-    return (p: Pt) => {
-      const x = PAD + ((p.lng - minLng) / lngSpan) * (VIEW_W - PAD * 2)
-      // 위도는 위로 갈수록 커지므로 y 를 뒤집는다
-      const y = PAD + ((maxLat - p.lat) / latSpan) * (VIEW_H - PAD * 2)
-      return { x, y }
-    }
-  }, [buildings, facilities, route, currentPosition])
-
   const routePoints = useMemo(() => {
     if (!route) return ''
-    return route.nodes.map((n) => project({ lat: n.lat, lng: n.lng })).map((p) => `${p.x},${p.y}`).join(' ')
-  }, [route, project])
+    return route.nodes.map((n) => projectMapPoint({ lat: n.lat, lng: n.lng })).map((p) => `${p.x},${p.y}`).join(' ')
+  }, [route])
 
-  const cur = currentPosition ? project(currentPosition) : null
+  const cur = currentPosition ? projectMapPoint(currentPosition) : null
 
   return (
     <svg
@@ -108,7 +89,11 @@ export default function MapCanvas({
 
       {/* 건물 */}
       {buildings.map((b) => {
-        const { x, y } = project({ lat: b.lat, lng: b.lng })
+        // 현재 배경 이미지가 담고 있는 시연 구간의 건물만 표시한다.
+        // 범위 밖 건물을 자동 축소해 끌어오면 엉뚱한 건물 위에 라벨이 놓인다.
+        if (!VISIBLE_BUILDING_IDS.has(b.id)) return null
+        const { x, y } = projectMapPoint({ lat: b.lat, lng: b.lng })
+        if (x < 0 || x > VIEW_W || y < 0 || y > VIEW_H) return null
         const highlighted = b.id === highlightBuildingId
         return (
           <g
@@ -148,7 +133,9 @@ export default function MapCanvas({
 
       {/* 시설은 건물과 좌표가 가까워도 가려지지 않도록 건물 위에 표시한다. */}
       {facilities.map((f) => {
-        const { x, y } = project({ lat: f.lat, lng: f.lng })
+        if (f.buildingId && !VISIBLE_BUILDING_IDS.has(f.buildingId)) return null
+        const { x, y } = projectMapPoint({ lat: f.lat, lng: f.lng })
+        if (x < 0 || x > VIEW_W || y < 0 || y > VIEW_H) return null
         return <FacilityMarker key={f.id} x={x} y={y} type={f.type} name={f.name} />
       })}
 
